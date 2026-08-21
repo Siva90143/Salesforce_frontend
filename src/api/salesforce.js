@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://salesforcebackend-production-5533.up.railway.app'
+const BASE_URL = 'https://salesforcebackend-production-b61d.up.railway.app'
 
 export const api = axios.create({ baseURL: BASE_URL })
 
