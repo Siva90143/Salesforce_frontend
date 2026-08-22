@@ -197,7 +197,7 @@ function App() {
                         {f}
                       </th>
                     ))}
-                    <th className="w-44 shrink-0 truncate border-l border-gray-200 bg-gray-50 px-4 py-2 text-right font-medium text-gray-500">
+                    <th className="w-44 shrink-0 truncate border-l border-gray-200 bg-gray-50 px-4 py-3 text-center font-medium text-gray-500">
                       Actions
                     </th>
                   </tr>
@@ -210,8 +210,8 @@ function App() {
                           {record[f] ?? '—'}
                         </td>
                       ))}
-                      <td className="w-44 shrink-0 truncate border-l border-gray-200 bg-white px-4 py-2 text-right group-hover:bg-gray-50">
-                        <div className="flex justify-end gap-2">
+                      <td className="w-44 shrink-0 truncate border-l border-gray-200 bg-white px-4 py-2 text-center group-hover:bg-gray-50">
+                        <div className="flex justify-center gap-2">
                           <button
                             onClick={() => openView(record)}
                             className="rounded px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50"
