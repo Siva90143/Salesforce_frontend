@@ -174,10 +174,10 @@ function App() {
                 id="object-select"
                 value={objectName}
                 onChange={(e) => setObjectName(e.target.value)}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold focus:border-blue-500 focus:outline-none"
               >
                 {OBJECTS.map((obj) => (
-                  <option key={obj} value={obj}>
+                  <option key={obj} value={obj} className="font-semibold">
                     {obj}
                   </option>
                 ))}
@@ -260,7 +260,7 @@ function App() {
                 <button
                   onClick={goToNextPage}
                   disabled={!hasMore || loadingList}
-                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-400"
                 >
                   Next
                 </button>
