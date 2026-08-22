@@ -189,15 +189,15 @@ function App() {
             )}
 
             <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <table className="w-full table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                   <tr>
                     {fields.map((f) => (
-                      <th key={f} className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-500">
+                      <th key={f} className="truncate px-4 py-2 text-left font-medium text-gray-500">
                         {f}
                       </th>
                     ))}
-                    <th className="sticky right-0 whitespace-nowrap border-l border-gray-200 bg-gray-50 px-4 py-2 text-right font-medium text-gray-500">
+                    <th className="w-44 shrink-0 truncate border-l border-gray-200 bg-gray-50 px-4 py-2 text-right font-medium text-gray-500">
                       Actions
                     </th>
                   </tr>
@@ -206,11 +206,11 @@ function App() {
                   {records.map((record) => (
                     <tr key={record.Id} className="group hover:bg-gray-50">
                       {fields.map((f) => (
-                        <td key={f} className="whitespace-nowrap px-4 py-2 text-gray-700">
+                        <td key={f} title={record[f] ?? ''} className="truncate px-4 py-2 text-gray-700">
                           {record[f] ?? '—'}
                         </td>
                       ))}
-                      <td className="sticky right-0 whitespace-nowrap border-l border-gray-200 bg-white px-4 py-2 text-right group-hover:bg-gray-50">
+                      <td className="w-44 shrink-0 truncate border-l border-gray-200 bg-white px-4 py-2 text-right group-hover:bg-gray-50">
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => openView(record)}
