@@ -13,6 +13,10 @@ export async function getAuthStatus() {
   return data
 }
 
+export async function logout() {
+  await api.post('/auth/salesforce/logout')
+}
+
 export async function listRecords(objectName, page) {
   const { data } = await api.get(`/api/salesforce/${objectName}`, { params: { page } })
   return data

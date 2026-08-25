@@ -1,7 +1,16 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { OBJECTS, FIELDS } from './objectFields'
-import { loginUrl, getAuthStatus, listRecords, getRecord, updateRecord, deleteRecord } from './api/salesforce'
+import {
+  loginUrl,
+  getAuthStatus,
+  logout as logoutRequest,
+  listRecords,
+  getRecord,
+  updateRecord,
+  deleteRecord,
+} from './api/salesforce'
 import RecordModal from './components/RecordModal'
+import ToastContainer from './components/ToastContainer'
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false)
@@ -18,6 +27,17 @@ function App() {
   const [modal, setModal] = useState(null) // { mode: 'view'|'edit'|'delete', record }
   const [modalLoading, setModalLoading] = useState(false)
   const [modalError, setModalError] = useState('')
+
+  const [toasts, setToasts] = useState([])
+  const toastId = useRef(0)
+
+  const showToast = useCallback((message, type = 'success') => {
+    const id = ++toastId.current
+    setToasts((prev) => [...prev, { id, message, type }])
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id))
+    }, 3500)
+  }, [])
 
   const checkAuth = useCallback(async () => {
     try {
@@ -71,6 +91,20 @@ function App() {
     loadPage(objectName, 0)
   }, [authenticated, objectName, loadPage])
 
+  async function handleLogout() {
+    try {
+      await logoutRequest()
+    } catch {
+      // even if the request fails, drop the client-side session state
+    } finally {
+      setAuthenticated(false)
+      setInstanceUrl('')
+      setRecords([])
+      setPage(0)
+      setHasMore(true)
+    }
+  }
+
   function goToPreviousPage() {
     if (page === 0 || loadingList) return
     loadPage(objectName, page - 1)
@@ -110,8 +144,11 @@ function App() {
       await updateRecord(objectName, Id, fields)
       setRecords((prev) => prev.map((r) => (r.Id === Id ? { ...r, ...fields } : r)))
       setModal(null)
+      showToast(`${objectName} updated successfully.`)
     } catch (err) {
-      setModalError(err.response?.data?.message || err.message || 'Failed to save record')
+      const message = err.response?.data?.message || err.message || 'Failed to save record'
+      setModalError(message)
+      showToast(message, 'error')
     } finally {
       setModalLoading(false)
     }
@@ -125,8 +162,11 @@ function App() {
       await deleteRecord(objectName, id)
       setRecords((prev) => prev.filter((r) => r.Id !== id))
       setModal(null)
+      showToast(`${objectName} deleted successfully.`)
     } catch (err) {
-      setModalError(err.response?.data?.message || err.message || 'Failed to delete record')
+      const message = err.response?.data?.message || err.message || 'Failed to delete record'
+      setModalError(message)
+      showToast(message, 'error')
     } finally {
       setModalLoading(false)
     }
@@ -136,16 +176,26 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ToastContainer toasts={toasts} />
+
       <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <h1 className="text-xl font-semibold text-gray-900">Salesforce Records</h1>
           {checkingAuth ? (
             <span className="text-sm text-gray-400">Checking connection…</span>
           ) : authenticated ? (
-            <span className="flex items-center gap-2 text-sm text-green-700">
-              <span className="h-2 w-2 rounded-full bg-green-500" />
-              Connected {instanceUrl ? `(${new URL(instanceUrl).hostname})` : ''}
-            </span>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-2 text-sm text-green-700">
+                <span className="h-2 w-2 rounded-full bg-green-500" />
+                Connected {instanceUrl ? `(${new URL(instanceUrl).hostname})` : ''}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <a
               href={loginUrl()}
