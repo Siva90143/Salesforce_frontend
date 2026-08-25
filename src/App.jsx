@@ -191,7 +191,7 @@ function App() {
               </span>
               <button
                 onClick={handleLogout}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="rounded-md border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
               >
                 Logout
               </button>
